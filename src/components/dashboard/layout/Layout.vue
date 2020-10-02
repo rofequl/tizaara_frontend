@@ -1,0 +1,65 @@
+<template>
+  <div>
+    <Sidebar/>
+    <div id="right-panel" class="right-panel">
+      <Header/>
+      <router-view :key="$route.path"></router-view>
+    </div>
+  </div>
+</template>
+
+<script>
+import {mapGetters} from "vuex";
+import Header from './inc/Header'
+import Sidebar from './inc/Sidebar'
+
+export default {
+  name: "Layout",
+  components: {
+    Header, Sidebar
+  },
+  methods: {
+    loadResize: () => {
+      let windowWidth = $(window).width();
+      if (windowWidth < 1010) {
+        $('body').addClass('small-device');
+      } else {
+        $('body').removeClass('small-device');
+      }
+    },
+    userStatus(val) {
+      if (this.currentRouteName !== 'verify-admin' && val.status != 2) {
+        this.$router.push({name: "verify-admin"});
+      }
+    }
+  },
+  created() {
+    this.loadResize();
+  },
+  mounted() {
+    if (!this.isAuthenticated) {
+      this.$router.push({name: "home"});
+    }
+  },
+  computed: {
+    ...mapGetters([
+      "isAuthenticated",
+    ]),
+    user() {
+      return this.$store.getters.currentUser;
+    },
+    currentRouteName() {
+      return this.$route.name;
+    }
+  },
+  watch: {
+    user(val) {
+      this.userStatus(val);
+    }
+  }
+}
+</script>
+
+<style lang="scss" scoped>
+@import 'src/assets/scss/dashboard/index';
+</style>

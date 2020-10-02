@@ -1,0 +1,35 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css');
+// If you want to override variables do it here
+@import "variables";
+
+// If you want to add something do it here
+@import "custom";
+
+.categorie-menu-wrapper {
+  ul {
+    li {
+      a {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        .cat-image {
+          width: 16px;
+          opacity: .6;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}
+
+.text-ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cursor-hand {
+  cursor: pointer!important;
+}
