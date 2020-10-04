@@ -9,10 +9,14 @@
           <li v-if="isSupplier" class="menu-title">Supplier</li>
           <li class="menu-item-has-children dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
-                class="menu-icon fa fa-cogs"></i>Product</a>
+                class="menu-icon fa fa-shopping-cart"></i>Product</a>
             <ul class="sub-menu children dropdown-menu">
-              <li><a href="#">Product List</a></li>
-              <li><a href="#">Product upload</a></li>
+              <li>
+                <router-link to="/product-list">Product List</router-link>
+              </li>
+              <li>
+                <router-link to="/product-create">Post a Product</router-link>
+              </li>
             </ul>
           </li>
           <li v-if="isBuyer" class="menu-title">Buyer</li>

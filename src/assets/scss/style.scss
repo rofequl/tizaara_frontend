@@ -31,5 +31,63 @@
 }
 
 .cursor-hand {
-  cursor: pointer!important;
+  cursor: pointer !important;
+}
+
+.ck-editor__editable {
+  min-height: 300px;
+}
+
+.vs__search::placeholder {
+  color: #000000;
+  opacity: 0.5;
+}
+
+.vue-tags-input {
+  max-width: 100%;
+}
+
+.invalid_error {
+  display: none;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 80%;
+  color: #392a2a;
+  box-sizing: border-box;
+}
+
+.vue-tags-input .ti-new-tag-input {
+  padding-bottom: 3px !important;
+  background: transparent;
+  color: #525b5d;
+  font-size: 14px;
+}
+
+#my-strictly-unique-vue-upload-multiple-image {
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+  margin-top: 60px;
+}
+
+.colorImage {
+  .image-container {
+    width: 100px !important;
+    height: 100px !important;
+
+    .preview-image {
+      height: 69px !important;
+    }
+
+    .image-bottom {
+      height: 20px !important;
+    }
+  }
+
+  .show-image img {
+    max-height: 70px !important;
+    max-width: 68px !important;
+  }
 }

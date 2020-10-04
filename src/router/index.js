@@ -48,6 +48,17 @@ export default new Router({
                     name: "verify-admin",
                     component: () => import("@/components/dashboard/other/Verify")
                 },
+                {
+                    meta: {title: 'Create new product'},
+                    path: "/product-create",
+                    name: "product-create",
+                    component: () => import("@/components/dashboard/product/ProductCreate")
+                }, {
+                    meta: {title: 'Product List'},
+                    path: "/product-list",
+                    name: "product-list",
+                    component: () => import("@/components/dashboard/product/ProductList")
+                },
             ]
         }
     ]

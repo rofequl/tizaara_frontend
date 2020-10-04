@@ -9,7 +9,8 @@ export const iconsSet = Object.assign(
         faPlus,
         faArrowLeft,
         faChevronLeft,
-        faStar
+        faStar,
+        faTrashAlt
     }
 )
 
@@ -23,7 +24,8 @@ import {
     faPlus,
     faArrowLeft,
     faChevronLeft,
-    faStar
+    faStar,
+    faTrashAlt
 } from '@fortawesome/free-solid-svg-icons';
 
 library.add(
@@ -35,5 +37,6 @@ library.add(
     faPlus,
     faArrowLeft,
     faChevronLeft,
-    faStar
+    faStar,
+    faTrashAlt
 );

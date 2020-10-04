@@ -54,3 +54,40 @@ Vue.use(VueLazyload, {
     loading: 'https://i.ibb.co/jG5PXnD/spinner.gif',
     attempt: 1
 })
+
+/*============================================
+// npm install vue-form-wizard
+============================================= */
+import VueFormWizard from 'vue-form-wizard'
+import 'vue-form-wizard/dist/vue-form-wizard.min.css'
+
+Vue.use(VueFormWizard)
+
+/*============================================
+// npm install vue select
+============================================= */
+import vSelect from 'vue-select'
+
+Vue.component('v-select', vSelect);
+
+/*============================================
+// npm install v-video-embed
+============================================= */
+import Embed from 'v-video-embed'
+
+Vue.use(Embed);
+
+/*============================================
+// npm install @johmun/vue-tags-input
+============================================= */
+import VueTagsInput from '@johmun/vue-tags-input';
+
+Vue.component('VueTagsInput', VueTagsInput);
+
+/*============================================
+// npm install --save @ckeditor/ckeditor5-vue @ckeditor/ckeditor5-build-classic
+============================================= */
+
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+Vue.use(CKEditor);
