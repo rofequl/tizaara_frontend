@@ -40,18 +40,16 @@ window.swal = swal;
 
 import GoogleAuth from '@/core/config/google_oAuth'
 
-const gauthOption = {
-    clientId: '541835342636-cpkgm0vn65eev3p1b3o3hngibfsd09ul.apps.googleusercontent.com',
-    scope: 'profile email',
-    prompt: 'select_account'
-}
-Vue.use(GoogleAuth, gauthOption)
+import GSignInButton from 'vue-google-signin-button'
+
+Vue.use(GSignInButton)
 
 import VueLazyload from 'vue-lazyload'
 
 Vue.use(VueLazyload, {
     preLoad: 1.3,
-    loading: 'https://i.ibb.co/jG5PXnD/spinner.gif',
+    error: 'https://i.ibb.co/qYN3mLP/warning.png',
+    loading: 'https://i.ibb.co/028NJ03/4V0b.gif',
     attempt: 1
 })
 
@@ -91,3 +89,17 @@ Vue.component('VueTagsInput', VueTagsInput);
 import CKEditor from '@ckeditor/ckeditor5-vue';
 
 Vue.use(CKEditor);
+
+/*============================================
+// npm install @mathieustan/vue-datepicker --save
+============================================= */
+import VueDatePicker from '@mathieustan/vue-datepicker';
+import '@mathieustan/vue-datepicker/dist/vue-datepicker.min.css';
+
+Vue.use(VueDatePicker);
+
+/*============================================
+// npm install --save vue-scrollto
+============================================= */
+const VueScrollTo = require('vue-scrollto')
+Vue.use(VueScrollTo)

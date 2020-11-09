@@ -8,9 +8,37 @@
             <!-- Part - 1 -->
             <tab-content title="Product Information" icon="ti-package" :before-change="validateFirstStep">
 
+              <div class="card" style="background-color: #dae2ed;">
+                <div class="card-body" style="padding: 12px">
+                  <b-row>
+                    <b-col>
+                      <b-form-select v-model="form.category_id" :options="Object.values(categoryList)" value-field="id"
+                                     text-field="name" @input="categorySelect" :select-size="18"
+                                     class="cat-select-design"></b-form-select>
+                    </b-col>
+                    <b-col>
+                      <b-form-select v-if="subcategory.length > 0" v-model="form.sub_category_id" :options="subcategory"
+                                     :select-size="18" value-field="id" @input="subcategorySelect"
+                                     text-field="name" class="cat-select-design"></b-form-select>
+                    </b-col>
+                    <b-col>
+                      <b-form-select v-if="subsubcategory.length > 0" v-model="form.sub_subcategory_id"
+                                     :options="subsubcategory" @input="subsubcategorySelect"
+                                     :select-size="18" value-field="id"
+                                     text-field="name" class="cat-select-design"></b-form-select>
+                    </b-col>
+                  </b-row>
+                </div>
+                <div class="card-footer" style="font-size: 13px">
+                  Categories Selected:
+                  {{ catNameShow(form.category_id, 'category') }} {{ catNameShow(form.sub_category_id, 'subcategory') }}
+                  {{ catNameShow(form.sub_subcategory_id, 'sub-subcategory') }}
+                  <i v-if="cat_valid" class="fas fa-check-circle text-success" style="font-size: 15px"></i>
+                </div>
+              </div>
               <b-row class="my-3">
                 <b-col sm="3">
-                  <label for="input-small">Product Name :</label>
+                  <label for="input-small">Product Name* :</label>
                 </b-col>
                 <b-col sm="9">
                   <b-form-input id="input-small" size="sm" placeholder="Enter product name"
@@ -25,7 +53,6 @@
                   </b-form-invalid-feedback>
                 </b-col>
               </b-row>
-
               <b-row class="my-3">
                 <b-col sm="3">
                   <label for="sort-desc">Product sort description : </label>
@@ -40,57 +67,12 @@
                   </b-form-invalid-feedback>
                 </b-col>
               </b-row>
-
-              <b-row class="my-3">
-                <b-col sm="3">
-                  <label for="select-category"> Select Category : </label>
-                </b-col>
-                <b-col sm="9">
-                  <v-select v-model="$v.form.category_id.$model" :options="category" label="name"
-                            placeholder="Select product category" id="select-category"
-                            :reduce="name => name.id" @input="loadSubcategory"
-                            :state="validateState('category_id')">
-                    <template #option="{ name, icon }">
-                      <img :src="showImage(icon)" class="mx-2" width="18px" height="18px" alt="Category">
-                      <em>{{ name }}</em>
-                    </template>
-                  </v-select>
-                  <div class="category_error invalid_error"></div>
-                </b-col>
-              </b-row>
-
-              <b-row class="my-3">
-                <b-col sm="3">
-                  <label for="select-subcategory"> Select Subcategory : </label>
-                </b-col>
-                <b-col sm="9">
-                  <v-select v-model="$v.form.subcategory_id.$model" :options="subcategory" label="name"
-                            placeholder="Select product sub-category" id="select-subcategory"
-                            :reduce="name => name.id" @input="loadSubSubcategory"
-                            :state="validateState('subcategory_id')"></v-select>
-                  <div class="subcategory_error invalid_error"></div>
-                </b-col>
-              </b-row>
-
-              <b-row class="my-3">
-                <b-col sm="3">
-                  <label for="select-subsubcategory"> Select Sub Subcategory : </label>
-                </b-col>
-                <b-col sm="9">
-                  <v-select v-model="$v.form.subsubcategory_id.$model" :options="subsubcategory" label="name"
-                            placeholder="Select product sub-subcategory" id="select-subsubcategory"
-                            :reduce="name => name.id" @input="loadProperty"
-                            :state="validateState('subsubcategory_id')"></v-select>
-                  <div class="subsubcategory_error invalid_error"></div>
-                </b-col>
-              </b-row>
-
               <b-row class="my-3">
                 <b-col sm="3">
                   <label for="brand"> Select Brand : </label>
                 </b-col>
                 <b-col sm="9">
-                  <v-select v-model="form.brand_id" :options="brand" label="name"
+                  <v-select v-model="form.brand_id" :options="Object.values(brandList)" label="name"
                             placeholder="Select product brand" id="brand"
                             :reduce="name => name.id">
                     <template #option="{ name, logo }">
@@ -100,39 +82,34 @@
                   </v-select>
                 </b-col>
               </b-row>
-
               <b-row class="my-3">
                 <b-col sm="3">
                   <label for="unit"> Select Unit : </label>
                 </b-col>
                 <b-col sm="9">
-                  <v-select v-model="form.unit" :options="unit" label="name"
+                  <v-select v-model="form.unit" :options="Object.values(unitList)" label="name"
                             placeholder="Select product unit"
                             :reduce="name => name.id"></v-select>
                 </b-col>
               </b-row>
-
-              <b-row class="my-3">
+              <b-row v-for="(property, k) in form.properties" :key="k">
                 <b-col sm="3">
-                  <label for="properties"> Select Properties : </label>
+                  <b-form-input v-model="property.label" placeholder="Enter property label"
+                                :disabled="property.type != 0" required></b-form-input>
                 </b-col>
-                <b-col sm="9">
-                  <v-select v-model="form.property" :options="property" label="name"
-                            placeholder="Select Properties" @input="addNewProperty" id="properties"
-                            :reduce="name => name.id" multiple></v-select>
+                <b-col sm="8">
+                  <b-form-input class="mb-3" v-model="property.value" placeholder="Enter property value"
+                                required></b-form-input>
+                </b-col>
+                <b-col sm="1">
+                  <b-button size="sm" color="secondary" @click="removeProperty(k, property)">
+                    <font-awesome-icon icon="trash-alt"/>
+                  </b-button>
                 </b-col>
               </b-row>
-
-              <b-row class="my-3" v-for="addproperties in form.property_options">
-                <b-col sm="3">
-                  <label for="properties-value"> {{ addproperties.name }} : </label>
-                </b-col>
-                <b-col sm="9">
-                  <b-input v-model="addproperties.value"
-                           :placeholder="'Enter '+addproperties.name+' information'" id="properties-value"></b-input>
-                </b-col>
-              </b-row>
-
+              <p class="text-info font-weight-bold my-2" style="font-size: 12px;cursor: pointer"
+                 @click="addMoreProperty">
+                + ADD MORE PROPERTY</p>
 
             </tab-content>
             <!-- End Part - 1 -->
@@ -150,10 +127,11 @@
               <b-row class="my-3">
                 <b-col md="6">
                   <div role="group" class="d-flex justify-content-center">
-                    <div class=""><label>Select Product Images :</label>
+                    <div class=""><label>Select Product Images* :</label>
                       <vue-upload-multiple-image
                           @before-remove="(index, done, fileList) =>{ done(); form.photos = fileList}"
                           @upload-success="(formData, index, fileList) =>{ form.photos = fileList}"
+                          @edit-image="(formData, index, fileList) =>{ form.photos = fileList}"
                           :data-images="images" popupText="Product image, you can add only 9 image"
                           idUpload="myIdUpload" editUpload="myIdEdit" idEdit="myIdEdited"
                           dragText="Drag images (many)." browseText="Select multiple image"
@@ -165,10 +143,11 @@
                 </b-col>
                 <b-col md="6">
                   <div role="group" class="d-flex justify-content-center">
-                    <div class=""><label>Select Thumbnail Image :</label>
+                    <div class=""><label>Select Thumbnail Image* :</label>
                       <vue-upload-multiple-image
                           @before-remove="(index, done, fileList) =>{ done(); form.thumbnail_img = fileList}"
-                          @upload-success="(formData, index, fileList) =>{ form.thumbnail_img = fileList[0].path}"
+                          @upload-success="(formData, index, fileList) =>{ form.thumbnail_img = fileList}"
+                          @edit-image="(formData, index, fileList) =>{ form.thumbnail_img = fileList}"
                           :data-images="thumbnail" popupText="Product thumbnail image, you can edit and delete"
                           idUpload="myIdUpload1" editUpload="myIdEdit1" idEdit="myIdEdited1"
                           dragText="Drag images (290x300)." browseText="Select single image"
@@ -185,7 +164,8 @@
                     <div class=""><label>Select Featured Images :</label>
                       <vue-upload-multiple-image
                           @before-remove="(index, done, fileList) =>{ done(); form.featured_img = fileList}"
-                          @upload-success="(formData, index, fileList) =>{ form.featured_img = fileList[0].path}"
+                          @upload-success="(formData, index, fileList) =>{ form.featured_img = fileList}"
+                          @edit-image="(formData, index, fileList) =>{ form.featured_img = fileList}"
                           :data-images="featured" popupText="Product Featured image, you can edit and delete"
                           idUpload="myIdUpload2" editUpload="myIdEdit2" idEdit="myIdEdited2"
                           dragText="Drag images (290x300)." browseText="Select single image"
@@ -200,7 +180,8 @@
                     <div class=""><label>Select Flash Deal Image :</label>
                       <vue-upload-multiple-image
                           @before-remove="(index, done, fileList) =>{ done(); form.flash_deal_img = fileList}"
-                          @upload-success="(formData, index, fileList) =>{ form.flash_deal_img = fileList[0].path}"
+                          @upload-success="(formData, index, fileList) =>{ form.flash_deal_img = fileList}"
+                          @edit-image="(formData, index, fileList) =>{ form.flash_deal_img = fileList}"
                           :data-images="flash_deal" popupText="Product Flash Deal image, you can edit and delete"
                           idUpload="myIdUpload3" editUpload="myIdEdit3" idEdit="myIdEdited3"
                           dragText="Drag images (290x300)." browseText="Select single image"
@@ -247,7 +228,8 @@
                   </b-button>
                 </b-col>
                 <b-col cols="6" size="sm" sm="4" md="6" class="mb-3 mb-xl-0">
-                  <v-select v-model="form.color" :options="color" label="name" @input="addNewColor"
+                  <v-select v-model="form.color" :options="Object.values(colorList)" label="name"
+                            @input="selectColour"
                             placeholder="Select product colour"
                             :reduce="name => name.name" multiple>
                     <template #option="{ name, code }">
@@ -262,10 +244,10 @@
                 <b-col cols="6" sm="4" md="3" class="mb-3 mb-xl-0">
                   <b-form-checkbox
                       id="checkbox-1"
-                      v-model="color_image"
+                      v-model="color_type"
                       name="checkbox-1"
-                      value="yes"
-                      unchecked-value="no">
+                      value="1"
+                      unchecked-value="0">
                     Colour with image
                   </b-form-checkbox>
                 </b-col>
@@ -279,7 +261,8 @@
                            :key="index">
                       <vue-upload-multiple-image class="colorImage"
                                                  @before-remove="(index, done, fileList) =>{ done(); image.image = fileList}"
-                                                 @upload-success="(formData, index, fileList) =>{ image.image = fileList[0].path}"
+                                                 @upload-success="(formData, index, fileList) =>{ image.image = fileList}"
+                                                 @edit-image="(formData, index, fileList) =>{ image.image = fileList}"
                                                  v-bind:idUpload="'myIdUploads'+index"
                                                  v-bind:editUpload="'myIdEdits'+index"
                                                  v-bind:idEdit="'myIdEditeds'+index"
@@ -301,15 +284,16 @@
                   </b-button>
                 </b-col>
                 <b-col cols="6" sm="4" md="6" class="mb-3 mb-xl-0">
-                  <v-select v-model="form.attribute" :options="attribute" label="name" @input="addNewAttribute"
-                            :reduce="name => name.id" placeholder="Select product Attribute" multiple>
+                  <v-select v-model="form.attribute" :options="Object.values(attributeList)" label="name"
+                            @input="selectAttribute"
+                            :reduce="name => name.name" placeholder="Select product Attribute" multiple>
                   </v-select>
                 </b-col>
               </b-row>
 
               <p class="text-info">Note: Choose the attributes of this product and then input values of each
                 attribute</p>
-              <b-row class="mt-3" v-for="(addAttributes, index) in addAttribute" :key="index">
+              <b-row class="mt-3" v-for="(addAttributes, index) in form.attribute_options" :key="index">
                 <b-col cols="6" sm="4" md="2" class="mb-3 mb-xl-0">
                   <b-button block color="dark" disabled>{{ addAttributes.name }}</b-button>
                 </b-col>
@@ -318,20 +302,36 @@
                       v-model="addAttributes.tag" class="w-100"
                       :tags="addAttributes.value"
                       :allow-edit-tags="true" :separators="[';', ',']"
-                      @tags-changed="newTags => addAttributes.value = newTags"/>
+                      @tags-changed="(newTags) => {addAttributes.value = newTags; priceList()}"/>
                 </b-col>
               </b-row>
 
               <br><br><br>Product Tax, Offer & Discount
               <hr>
+              <b-row v-if="form.priceType == 0">
+                <b-col cols="6" sm="4" md="6" class="mb-3 mb-xl-0">
+                  <b-form-group
+                      label-cols-sm="4"
+                      label-cols-lg="3"
+                      label="SKU : "
+                      label-for="sku">
+                    <b-form-input v-model="form.sku" size="sm"
+                                  placeholder="Enter product sku" id="sku" readonly disabled></b-form-input>
+                  </b-form-group>
+                </b-col>
+              </b-row>
               <b-row class="mb-3">
                 <b-col cols="6" sm="4" md="3" class="mb-3 mb-xl-0">
                   <b-form-checkbox v-model="orderQtyLimit" name="check-button" switch>
                     Order Quantity Limit:
                   </b-form-checkbox>
                 </b-col>
-                <b-col v-if="orderQtyLimit" cols="6" sm="4" md="3">
-                  <b-form-input v-model="form.orderQtyLimitValue" placeholder="Enter maximum Order Quantity" value="1"
+                <b-col v-if="form.orderQtyLimit === 1" cols="6" sm="4" md="3">
+                  <b-form-input v-model="form.orderQtyLimitMax" placeholder="Enter maximum Order Quantity"
+                                type="number" min="1"></b-form-input>
+                </b-col>
+                <b-col v-if="form.orderQtyLimit === 1" cols="6" sm="4" md="3">
+                  <b-form-input v-model="form.orderQtyLimitMin" placeholder="Enter maximum Order Quantity"
                                 type="number" min="1"></b-form-input>
                 </b-col>
               </b-row>
@@ -341,10 +341,11 @@
                   <b-form-group
                       label-cols-sm="4"
                       label-cols-lg="3"
-                      label="Select Currency :"
+                      label="Select Currency* :"
                       label-for="select-currency">
-                    <b-form-select v-model="$v.form.currency_id.$model" :options="currency" size="sm"
-                                   placeholder="Please select Currency" id="select-currency"
+                    <b-form-select v-model="$v.form.currency_id.$model" :options="Object.values(currencyList)" size="sm"
+                                   placeholder="Please select Currency" value-field="id"
+                                   text-field="name" id="select-currency"
                                    :state="validateState('currency_id')"></b-form-select>
                     <b-form-invalid-feedback v-if="!$v.form.currency_id.required">
                       Currency required.
@@ -369,7 +370,7 @@
                                  placeholder="Select tax type"></b-form-select>
                 </b-col>
               </b-row>
-              <b-row class="my-2" v-if="!discountMethod">
+              <b-row class="my-2" v-if="form.discountMethod == 0">
                 <b-col cols="6" sm="4" md="7" class="mb-3 mb-xl-0">
                   <b-form-group
                       label-cols-sm="4"
@@ -389,14 +390,14 @@
                 <b-col cols="6" sm="4" md="12" class="mb-3 mb-xl-0">
                   <b-form-checkbox
                       id="checkbox-4"
-                      v-model="tier_select"
-                      value="discount">
+                      v-model="form.discountMethod"
+                      value="1" unchecked-value="0">
                     Enable volume tier Discount
                   </b-form-checkbox>
                 </b-col>
               </b-row>
 
-              <b-row v-if="discountMethod" class="my-4">
+              <b-row v-if="form.discountMethod == 1" class="my-4">
                 <b-col cols="12" sm="12" md="8" class="mb-3 mb-xl-0">
                   <p class="text-right text-info font-weight-bold my-0" style="font-size: 12px;cursor: pointer"
                      @click="addTierDiscount">
@@ -437,18 +438,10 @@
               </b-row>
               <br><br><br>Product price and stock
               <hr>
-              <b-alert
-                  variant="danger"
-                  dismissible
-                  fade
-                  :show="showDismissibleAlert"
-                  @dismissed="showDismissibleAlert=false">
-                First select some attribute!
-              </b-alert>
               <b-row class="mt-4">
                 <b-col cols="12">
                   <b-form-group>
-                    <b-form-radio-group id="radio-group-2" v-model="priceType" name="radio-sub-component">
+                    <b-form-radio-group id="radio-group-2" v-model="form.priceType" name="radio-sub-component">
                       <b-form-radio value="0">Simple Product</b-form-radio>
                       <b-form-radio value="1">Variable Product</b-form-radio>
                       <b-form-radio value="2">volume tier Pricing</b-form-radio>
@@ -491,19 +484,6 @@
                   </b-form-group>
                 </b-col>
               </b-row>
-              <b-row v-if="form.priceType == 0">
-                <b-col cols="6" sm="4" md="6" class="mb-3 mb-xl-0">
-                  <b-form-group
-                      label-cols-sm="4"
-                      label-cols-lg="3"
-                      label="SKU : "
-                      label-for="sku">
-                    <b-form-input v-model="form.sku" size="sm"
-                                  placeholder="Enter product sku" id="sku" readonly disabled></b-form-input>
-                  </b-form-group>
-                </b-col>
-              </b-row>
-
               <table v-if="form.priceType == 1" class="table table-bordered">
                 <thead>
                 <tr>
@@ -529,7 +509,6 @@
                 </tr>
                 </tbody>
               </table>
-
               <b-row v-if="form.priceType == 2" class="my-4">
                 <b-col cols="12" sm="12" md="8" class="mb-3 mb-xl-0">
                   <p class="text-right text-info font-weight-bold my-0" style="font-size: 12px;cursor: pointer"
@@ -575,9 +554,6 @@
             <tab-content title="Product Description" icon="ti-receipt" :before-change="validateForthStep">
               Product Description
               <hr>
-              <ckeditor :editor="editor" v-model="form.description" :config="editorConfig"></ckeditor>
-              <br><br>
-
               <b-form-group
                   label-cols-sm="4"
                   label-cols-lg="3"
@@ -623,8 +599,6 @@
                   </b-form-invalid-feedback>
                 </div>
               </div>
-
-
               <b-row form class="form-group">
                 <b-col sm="3">
                   Product Type :
@@ -638,28 +612,11 @@
                   </b-form-group>
                 </b-col>
               </b-row>
+              <br><br>
+              <ckeditor :editor="editor" v-model="form.description" :config="editorConfig"></ckeditor>
+              <br><br>
 
-              <br>Link Product :
-              <hr>
 
-              <v-select label="name" :filterable="false" :options="options" @search="onSearch" @input="addNewProduct"
-                        :reduce="name => name.id" placeholder="Search Product by name and sku" multiple>
-                <template slot="no-options">
-                  type to search product for link..
-                </template>
-                <template #option="{ name, thumbnail_img }">
-                  <div class="d-center">
-                    <img :src="showImage(thumbnail_img)" class="mx-2" width="18px" height="18px">
-                    {{ name }}
-                  </div>
-                </template>
-                <template slot="selected-option" slot-scope="option">
-                  <div class="selected d-center">
-                    <img :src="showImage(option.thumbnail_img)" class="mx-2" width="18px" height="18px">
-                    {{ option.name }}
-                  </div>
-                </template>
-              </v-select>
 
             </tab-content>
             <!-- End Part - 4 -->
@@ -675,7 +632,7 @@
                       label="Shipping cost : "
                       label-for="shipping-cost">
                     <b-form-input v-model="form.shipping_cost" size="sm" type="number" min="0"
-                                  :disabled="shippingSwitch"
+                                  :disabled="!shippingSwitch"
                                   value="0" placeholder="Shipping cost" id="shipping-cost"></b-form-input>
                   </b-form-group>
                 </b-col>
@@ -720,7 +677,8 @@
                 <b-col cols="6" sm="4" md="2" class="mb-3 mb-xl-0">
                   <vue-upload-multiple-image
                       @before-remove="(index, done, fileList) =>{ done(); form.meta_img = fileList}"
-                      @upload-success="(formData, index, fileList) =>{ form.meta_img = fileList[0].path}"
+                      @upload-success="(formData, index, fileList) =>{ form.meta_img = fileList}"
+                      @edit-image="(formData, index, fileList) =>{ form.meta_img = fileList}"
                       :data-images="meta_img" popupText="Product meta image, you can edit and delete"
                       idUpload="myIdUpload5" editUpload="myIdEdit5" idEdit="myIdEdited5"
                       dragText="Drag images (290x300)." browseText="Select single image"
@@ -745,99 +703,103 @@ import {api_base_url} from "@/core/config/app";
 import ApiService from "@/core/services/api.service";
 import VueUploadMultipleImage from 'vue-upload-multiple-image'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import {SUBSUBCATEGORY_LIST} from "@/core/services/store/module/subsubcategory";
+import {SUBCATEGORY_LIST} from "@/core/services/store/module/subcategory";
+import {CATEGORY_LIST} from "@/core/services/store/module/category";
+import {mapGetters} from "vuex";
+import {BRAND_LIST} from "@/core/services/store/module/brand";
+import {UNIT_LIST} from "@/core/services/store/module/unit";
+import {PROPERTY_LIST} from "@/core/services/store/module/property";
+import {COLOR_LIST} from "@/core/services/store/module/color";
+import {ATTRIBUTE_LIST} from "@/core/services/store/module/attribute";
+import {CURRENCY_LIST} from "@/core/services/store/module/currency";
 
 export default {
   mixins: [validationMixin],
   name: "ProductCreate",
   data() {
     return {
+      cat_valid: false,
+      cat_method: 1,
       form: new Form({
         name: '',
         sort_desc: '',
         added_by: 'supplier',
         category_id: '',
-        subcategory_id: '',
-        subsubcategory_id: '',
-        property: '',
+        sub_category_id: '',
+        sub_subcategory_id: '',
+        category_label: 1,
         brand_id: '',
         unit: '',
+        properties: [{
+          label: '',
+          value: '',
+          type: 0
+        }],
+        photos: [],
+        thumbnail_img: [],
+        featured_img: [],
+        flash_deal_img: [],
+        video_link: '',
+        color: [],
+        color_type: 0,
+        color_image: [],
+        attribute: [],
+        attribute_options: [],
+        orderQtyLimit: 0,
+        orderQtyLimitMax: null,
+        orderQtyLimitMin: null,
+        currency_id: '',
+        tax: null,
+        tax_type: 'Flat',
+        discount: null,
+        discount_type: 'Flat',
+        discountMethod: 0,
+        tierDiscount: [{
+          unit: 1,
+          value: 1,
+        }],
+        priceType: 0,
+        stockManagement: 1,
+        quantity: 0,
+        unit_price: 0,
+        sku: '',
+        priceMenu: [],
+        tierPrice: [{
+          min_unit: 1,
+          max_unit: 1,
+          value: 1,
+        }],
         weight: '',
         length: '',
         width: '',
         height: '',
         tags: '',
         product_type: 'New',
-        photos: [],
-        thumbnail_img: [],
-        featured_img: '',
-        flash_deal_img: '',
-        video_link: '',
-        color: '',
-        color_image: [],
-        attribute: '',
-        attribute_options: [],
-        property_options: [],
-        tax: 0,
-        tax_type: 'Flat',
-        discount: 0,
-        discount_type: 'Flat',
-        discount_variation: 0,
-        tierPrice: [{
-          min_unit: 1,
-          max_unit: 1,
-          value: 1,
-        }],
-        tierDiscount: [{
-          unit: 1,
-          value: 1,
-        }],
-        orderQtyLimit: 0,
-        orderQtyLimitValue: 0,
-        priceType: 0,
-        stockManagement: 1,
-        unit_price: 0,
-        currency_id: '',
-        quantity: 0,
-        sku: '',
-        variant_product: 0,
-        priceMenu: [],
         description: '',
-        linkProduct: '',
+        shipping_type: 0,
+        shipping_cost: '',
         meta_title: '',
         meta_description: '',
-        meta_img: '',
-        shipping_type: 'paid',
-        shipping_cost: '',
+        meta_img: [],
 
       }),
-      category: [],
       subcategory: [],
       subsubcategory: [],
-      property: [],
-      unit: [],
-      brand: [],
-      secondStepAlert: false,
       images: [],
       thumbnail: [],
       featured: [],
       flash_deal: [],
-      color: [],
-      color_image: 'no',
-      attribute: [],
-      addAttribute: [],
+      secondStepAlert: false,
+      color_type: "0",
       orderQtyLimit: false,
-      currency: [],
-      discountMethod: false,
-      tier_select: '',
-      showDismissibleAlert: false,
-      priceType: 0,
-      editor: ClassicEditor,
-      editorConfig: {},
       tags: [],
       tag: '',
-      options: [],
+      editor: ClassicEditor,
+      editorConfig: {},
       shippingSwitch: false,
       meta_img: [],
+      show: false
     }
   },
   validations: {
@@ -848,6 +810,9 @@ export default {
       },
       sort_desc: {
         maxLength: maxLength(500)
+      },
+      currency_id: {
+        required,
       },
       weight: {
         maxLength: maxLength(100)
@@ -861,22 +826,10 @@ export default {
       height: {
         maxLength: maxLength(10)
       },
-      category_id: {
-        required,
-      },
-      subcategory_id: {
-        required,
-      },
-      subsubcategory_id: {
-        required,
-      },
       photos: {
         required,
       },
       thumbnail_img: {
-        required,
-      },
-      currency_id: {
         required,
       },
     }
@@ -889,191 +842,153 @@ export default {
     showImage(e) {
       return api_base_url + e;
     },
+    categorySelect(e) {
+      if (e !== '' && e !== undefined) {
+        this.form.sub_category_id = '';
+        this.form.sub_subcategory_id = '';
+        this.subcategory = [];
+        this.subsubcategory = [];
+        this.subcategory = this.getSubcategoryById(e);
+        this.cat_method = 1;
+        this.cat_valid = !this.subcategory.length > 0;
+        this.loadCategory();
+      }
+    },
+    subcategorySelect(e) {
+      if (e !== '' && e !== undefined) {
+        this.form.sub_subcategory_id = '';
+        this.subsubcategory = [];
+        this.subsubcategory = this.getSubsubcategoryById(e);
+        this.cat_method = 2;
+        this.cat_valid = !this.subsubcategory.length > 0;
+        this.loadCategory();
+      }
+    },
+    subsubcategorySelect(e) {
+      if (e !== '' && e !== undefined) {
+        this.cat_method = 3;
+        this.cat_valid = true;
+        this.loadCategory();
+      }
+    },
+    loadCategory() {
+      this.form.properties = [{
+        label: '',
+        value: '',
+        type: 0
+      }];
+      if (this.cat_valid) {
+        let data = '';
+        if (this.cat_method === 1) {
+          let id = this.form.category_id;
+          data = this.propertyList.find(value => value.cat_id === id && value.position === 1)
+        }
+
+        if (this.cat_method === 2) {
+          let id = this.form.sub_category_id;
+          data = this.propertyList.find(value => value.cat_id === id && value.position === 2)
+        }
+
+        if (this.cat_method === 3) {
+          let id = this.form.sub_subcategory_id;
+          data = this.propertyList.find(value => value.cat_id === id && value.position === 3)
+        }
+        if (data !== undefined) {
+          let property = JSON.parse(data.name);
+          for (let i = 0; i < property.length; i++) {
+            this.form.properties.unshift({
+              label: property[i].name,
+              value: '',
+              type: 1
+            });
+          }
+        }
+      }
+    },
+    catNameShow(id, type) {
+      if (type === 'category' && id !== '') {
+        let data = this.getCategoryById(id)
+        return data ? data.name : '';
+      }
+
+      if (type === 'subcategory' && id !== '') {
+        let data = this.getSubcategoryNameById(id)
+        return data ? '>>' + data.name : '';
+      }
+
+      if (type === 'sub-subcategory' && id !== '') {
+        let data = this.getSubsubcategoryNameById(id)
+        return data ? '>>' + data.name : '';
+      }
+    },
+    addMoreProperty() {
+      this.form.properties.push({
+        label: '',
+        value: '',
+        type: 0
+      })
+    },
+    removeProperty(index, label) {
+      let idx = this.form.properties.indexOf(label);
+      if (idx > -1) {
+        this.form.properties.splice(idx, 1);
+      }
+    },
     validateFirstStep() {
       this.$v.form.$touch();
-      if (this.$v.form.name.$anyError || this.$v.form.category_id.$anyError || this.$v.form.subcategory_id.$anyError || this.$v.form.subsubcategory_id.$anyError) {
-        this.$v.form.category_id.$anyError ? $('.category_error').show().text('Category name required') : '';
-        this.$v.form.subcategory_id.$anyError ? $('.subcategory_error').show().text('Subcategory name required') : '';
-        this.$v.form.subsubcategory_id.$anyError ? $('.subsubcategory_error').show().text('Sub Subcategory name required') : '';
-        return false
-      }
       return true;
+    },
+    productVideo() {
+      this.$refs.youtube.src = this.form.video_link;
     },
     validateSecondStep() {
       this.$v.form.$touch();
       if (this.$v.form.photos.$anyError || this.$v.form.thumbnail_img.$anyError) {
         this.secondStepAlert = true;
-        return false;
       } else {
         this.secondStepAlert = false;
-        return true;
-      }
-    },
-    validateThirdStep() {
-      this.$v.form.$touch();
-      return !this.$v.form.currency_id.$anyError;
-    },
-    validateForthStep() {
-      this.form.tags = '';
-      for (let i = 0; i < this.tags.length; i++) {
-        if (i === this.tags.length - 1)
-          this.form.tags += this.tags[i].text;
-        else
-          this.form.tags += this.tags[i].text + ",";
       }
       return true;
     },
-    loadCategory() {
-      let that = this;
-      ApiService.get('category')
-          .then(function (data) {
-            that.category = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    loadSubcategory(e) {
-      let that = this;
-      that.subcategory = [];
-      that.form.subcategory_id = '';
-      that.subsubcategory = [];
-      that.form.subsubcategory_id = '';
-      $('.category_error').hide();
-      if (e === null) return;
-      ApiService.get('subcategory/', e)
-          .then(function (data) {
-            that.subcategory = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    loadSubSubcategory(e) {
-      let that = this;
-      that.subsubcategory = [];
-      that.form.subsubcategory_id = '';
-      $('.subcategory_error').hide();
-      if (e === null) return;
-      ApiService.get('subsubcategory/', e)
-          .then(function (data) {
-            that.subsubcategory = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    loadProperty(e) {
-      $('.subsubcategory_error').hide()
-      let that = this;
-      that.property = [];
-      that.form.property = '';
-      if (e === null) return;
-      ApiService.get('property/', e)
-          .then(function (data) {
-            that.property = data.data.property;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    loadUnit() {
-      let that = this;
-      ApiService.get('unit')
-          .then(function (data) {
-            that.unit = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    loadBrand() {
-      let that = this;
-      ApiService.get('brand')
-          .then(function (data) {
-            that.brand = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    addNewProperty: function () {
-      this.form.property_options = [];
-      for (let prop in this.property) {
-        if (this.form.property.includes(this.property[prop].id)) {
-          this.form.property_options.push({
-            name: this.property[prop].name,
-            value: ''
-          })
+    selectColour(e) {
+      if (this.color_type === "1") {
+        for (let prop in this.form.color_image) {
+          let data = this.form.color.find(value => value === this.form.color_image[prop].name)
+          if (!data) {
+            this.form.color_image.splice(prop, 1);
+          }
         }
-      }
-    },
-    productVideo() {
-      this.$refs.youtube.src = this.form.video_link;
-    },
-    loadColor() {
-      let that = this;
-      ApiService.get('color')
-          .then(function (data) {
-            that.color = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    addNewColor: function () {
-      this.form.color_image = [];
-      let that = this;
-      setTimeout(() => {
-        if (this.color_image === 'yes') {
-          for (let prop in that.form.color) {
-            that.form.color_image.push({
-              name: that.form.color[prop],
+        for (let prop in e) {
+          let data2 = this.form.color_image.find(value => value.name === e[prop])
+          if (!data2) {
+            this.form.color_image.push({
+              name: e[prop],
               image: '',
               imageAlfa: [],
             })
           }
         }
-      }, 1000);
+      }
+      this.priceList();
     },
-    loadAttribute() {
-      let that = this;
-      ApiService.get('attribute')
-          .then(function (data) {
-            that.attribute = data.data;
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
-    },
-    addNewAttribute: function () {
-      this.addAttribute = [];
-      for (let prop in this.attribute) {
-        if (this.form.attribute.includes(this.attribute[prop].id)) {
-          this.addAttribute.push({
-            name: this.attribute[prop].name,
+    selectAttribute(e) {
+      for (let prop in this.form.attribute_options) {
+        let data = this.form.attribute.find(value => value === this.form.attribute_options[prop].name)
+        if (!data) {
+          this.form.attribute_options.splice(prop, 1);
+        }
+      }
+      for (let prop in e) {
+        let data2 = this.form.attribute_options.find(value => value.name === e[prop])
+        if (!data2) {
+          this.form.attribute_options.push({
+            name: e[prop],
             tag: '',
             value: []
           })
         }
       }
-    },
-    loadCurrency() {
-      let that = this;
-      ApiService.get('currency')
-          .then(function (data) {
-            that.currency = _.map(data.data, function (data) {
-              var pick = _.pick(data, 'id', 'name', 'symbol');
-              var object = {
-                value: pick.id,
-                text: pick.name + ' ( ' + pick.symbol + ' ) '
-              };
-              return object;
-            })
-          })
-          .catch(({response}) => {
-            console.log(response);
-          });
+      this.priceList();
     },
     addTierDiscount() {
       this.form.tierDiscount.push({
@@ -1082,42 +997,23 @@ export default {
       })
     },
     removeTierDiscount(index, invoice_product) {
-      var idx = this.form.tierDiscount.indexOf(invoice_product);
+      let idx = this.form.tierDiscount.indexOf(invoice_product);
       if (idx > -1) {
         this.form.tierDiscount.splice(idx, 1);
       }
     },
-    addTierPrice() {
-      this.form.tierPrice.push({
-        min_unit: 1,
-        max_unit: 1,
-        value: 1,
-      })
-    },
-    removeTierPrice(index, invoice_product) {
-      var idx = this.form.tierPrice.indexOf(invoice_product);
-      if (idx > -1) {
-        this.form.tierPrice.splice(idx, 1);
-      }
-    },
     priceList() {
       let data = [];
-      this.form.attribute_options = [];
       if (this.form.color.length > 0) data.push(this.form.color);
-      for (let prop in this.addAttribute) {
-        if (this.addAttribute[prop].value.length > 0) {
+      for (let prop in this.form.attribute_options) {
+        if (this.form.attribute_options[prop].value.length > 0) {
           var value = [];
-          for (let id in this.addAttribute[prop].value) {
-            value.push(this.addAttribute[prop].value[id].text);
+          for (let id in this.form.attribute_options[prop].value) {
+            value.push(this.form.attribute_options[prop].value[id].text);
           }
-          this.form.attribute_options.push({
-            'name': this.addAttribute[prop].name,
-            'value': value
-          })
           data.push(value);
         }
       }
-
       let result = [];
       let finalResult = [];
       if (data.length > 0) {
@@ -1137,9 +1033,6 @@ export default {
         }
       }
       this.form.priceMenu = finalResult;
-      if (this.form.priceMenu.length > 0) this.form.variant_product = 1;
-      else this.form.variant_product = 0;
-
     },
     getCombn(data) {
       var result = [];
@@ -1162,24 +1055,46 @@ export default {
       });
       return result;
     },
-    addNewProduct(e) {
-      this.form.linkProduct = e;
+    addTierPrice() {
+      this.form.tierPrice.push({
+        min_unit: 1,
+        max_unit: 1,
+        value: 1,
+      })
     },
-    onSearch(search, loading) {
-      loading(true);
-      this.search(loading, search, this);
+    removeTierPrice(index, invoice_product) {
+      var idx = this.form.tierPrice.indexOf(invoice_product);
+      if (idx > -1) {
+        this.form.tierPrice.splice(idx, 1);
+      }
     },
-    search: _.debounce((loading, search, vm) => {
-      let url = 'product-search?searchProduct=' + search;
-      ApiService.get(url)
-          .then(res => {
-            //console.log(res.data);
-            vm.options = res.data;
-            loading(false);
-          });
-    }, 350),
+    validateThirdStep() {
+      this.$v.form.$touch();
+      return true;
+    },
+    validateForthStep() {
+      this.form.tags = '';
+      for (let i = 0; i < this.tags.length; i++) {
+        if (i === this.tags.length - 1)
+          this.form.tags += this.tags[i].text;
+        else
+          this.form.tags += this.tags[i].text + ",";
+      }
+      return true;
+    },
     formSubmit: function () {
+      if (this.$v.form.$anyError) {
+        swal.fire('Invalid', 'Please fill-up required data', 'warning')
+        return false;
+      }
+
+      if (!this.cat_valid) {
+        swal.fire('Invalid', 'Category not selected', 'warning')
+        return false;
+      }
+
       this.show = true;
+      this.form.category_label = this.cat_method;
       this.form.post('user/product')
           .then((e) => {
             this.show = false;
@@ -1222,76 +1137,48 @@ export default {
                 confirmButtonColor: '#3085d6',
                 confirmButtonText: 'Ok'
               }).then((result) => {
-                this.$router.push({name: "In House Products"});
+                //this.$router.push({name: "In House Products"});
               })
             }
           })
     },
   },
   created() {
-    this.loadCategory();
-    this.loadUnit();
-    this.loadBrand();
-    this.loadColor();
-    this.loadAttribute();
-    this.loadCurrency();
     this.form.sku = btoa(Date.now() + Math.floor(Math.random() * 999)).replace(/[^a-zA-Z ]/g, "").toUpperCase();
+    this.$store.dispatch(SUBSUBCATEGORY_LIST)
+    this.$store.dispatch(SUBCATEGORY_LIST)
+    this.$store.dispatch(CATEGORY_LIST)
+    this.$store.dispatch(BRAND_LIST)
+    this.$store.dispatch(UNIT_LIST)
+    this.$store.dispatch(PROPERTY_LIST)
+    this.$store.dispatch(COLOR_LIST)
+    this.$store.dispatch(ATTRIBUTE_LIST)
+    this.$store.dispatch(CURRENCY_LIST)
+  },
+  computed: {
+    ...mapGetters(["categoryList", "getSubcategoryById", "getSubsubcategoryById", "getCategoryById", "getSubcategoryNameById", "getSubsubcategoryNameById", "brandList",
+      "unitList", "colorList", "attributeList", "currencyList", "propertyList"])
   },
   components: {
     VueUploadMultipleImage
   },
-  computed: {
-    price() {
-      return this.form.color;
-    }
-  },
   watch: {
-    tier_select: function (val) {
-      if (val === 'discount') {
-        this.form.discount_variation = 1;
-        this.discountMethod = true;
+    cat_valid: function () {
+      this.loadCategory();
+    },
+    color_type: function (val) {
+      if (val == "1") {
+        this.form.color_type = 1;
+        this.selectColour(this.form.color);
       } else {
-        this.form.discount_variation = 0;
-        this.discountMethod = false;
-      }
-    },
-    color_image: function (val) {
-      switch (val) {
-        case 'no':
-          this.form.color_image = [];
-          break;
-        default:
-          this.form.color_image = [];
-          this.addNewColor();
-          break;
-      }
-    },
-    addAttribute: {
-      deep: true,
-      handler() {
-        this.priceList();
+        this.form.color_type = 0;
       }
     },
     orderQtyLimit: function (val) {
       val ? this.form.orderQtyLimit = 1 : this.form.orderQtyLimit = 0;
     },
-    priceType: function (val) {
-      if (val == 1) {
-        if (this.form.priceMenu.length < 1) {
-          this.showDismissibleAlert = true;
-        }
-        this.form.priceType = 1;
-      } else if (val == 2) {
-        this.form.priceType = 2;
-      } else {
-        this.form.priceType = 0;
-      }
-    },
-    price() {
-      this.priceList();
-    },
     shippingSwitch: function (val) {
-      val ? this.form.shipping_type = 'free' : this.form.shipping_type = 'paid';
+      val ? this.form.shipping_type = 0 : this.form.shipping_type = 1;
     },
   }
 }

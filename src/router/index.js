@@ -1,8 +1,15 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import multiguard from 'vue-router-multiguard';
+import store from '../core/services/store'
 
 Vue.use(Router)
+
+const isLoggedIn = (to, from, next) => {
+    if (store.getters.isAuthenticated) {
+        next();
+    } else next({name: 'home'})
+}
 
 export default new Router({
     mode: 'history',
@@ -19,22 +26,29 @@ export default new Router({
                 },
                 {
                     meta: {title: 'Categories'},
-                    path: "/category/:cat/:sub?/:subcat?",
+                    path: "/category/:cat?/:sub?/:subcat?",
                     name: "category",
-                    component: () => import("@/components/product/Product_list")
+                    component: () => import("@/components/product/new")
                 },
+                // {
+                //     meta: {title: 'Categories'},
+                //     path: "/category/:cat/:sub",
+                //     name: "category-sub",
+                //     component: () => import("@/components/product/new")
+                // },
                 {
-                    meta: {title: 'Categories'},
-                    path: "/category/:cat/:sub",
-                    name: "category-sub",
-                    component: () => import("@/components/product/Product_list")
-                },
+                    meta: {title: 'All Categories List'},
+                    path: "/categories",
+                    name: "All Categories",
+                    component: () => import("@/components/others/Categories"),
+                }
             ]
         },
 
         {
             path: "/dashboard",
             component: () => import("@/components/dashboard/layout/Layout"),
+            beforeEnter: multiguard([isLoggedIn]),
             children: [
                 {
                     meta: {title: 'Dashboard'},
@@ -44,22 +58,41 @@ export default new Router({
                 },
                 {
                     meta: {title: 'User verify admin'},
-                    path: "/verify-admin",
+                    path: "/dashboard/verify-admin",
                     name: "verify-admin",
                     component: () => import("@/components/dashboard/other/Verify")
                 },
                 {
                     meta: {title: 'Create new product'},
-                    path: "/product-create",
+                    path: "/dashboard/product-create",
                     name: "product-create",
                     component: () => import("@/components/dashboard/product/ProductCreate")
-                }, {
+                },
+                {
                     meta: {title: 'Product List'},
-                    path: "/product-list",
+                    path: "/dashboard/product-list",
                     name: "product-list",
                     component: () => import("@/components/dashboard/product/ProductList")
                 },
+                {
+                    meta: {title: 'Message'},
+                    path: "/dashboard/message",
+                    name: "Message",
+                    component: () => import("@/components/dashboard/message/Message")
+                },
+                {
+                    meta: {title: 'Profile'},
+                    path: "/dashboard/profile",
+                    name: "Profile",
+                    component: () => import("@/components/dashboard/profile/Profile")
+                },
             ]
-        }
+        },
+        {
+            path: "*",
+            name: "error",
+            meta: {title: 'Error'},
+            component: () => import("@/components/others/Error"),
+        },
     ]
 })

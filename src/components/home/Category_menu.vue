@@ -8,30 +8,31 @@
               <li>
                 <div class="menu-title">
                   <h6 class="mb-0">Categories</h6>
-                  <a href="#">View All</a>
+                  <router-link to="/categories">View All</router-link>
                 </div>
               </li>
-              <li v-for="categories in category.slice(0,13)" :key="categories.id">
+              <li v-for="categories in categoryList.slice(0,13)" :key="categories.id">
                 <router-link :to="'category/'+categories.slug">
-                  <img :src="showImage(categories.icon)" v-if="categories.icon" class="cat-image"
-                       :class="categories.subcategories.length > 0? 'dropdown-toggle':''">
+                  <img v-lazy="showImage(categories.icon)" v-if="categories.icon" class="cat-image"
+                       :class="getSubcategoryById(categories.id).length > 0? 'dropdown-toggle':''">
                   {{ categories.name }}
                 </router-link>
-                <ul v-if="categories.subcategories.length !== 0" ref="userPanelMainContents">
+                <ul v-if="getSubcategoryById(categories.id).length > 0">
                   <li>
                     <div class="row mb-3">
                       <div class="col-sm-12 ">
                         <a href="javascript:" class="mob-btn-back d-lg-none"><i
                             class="fa fa-arrow-left"></i> Back</a>
                       </div>
-                      <div class="col-sm-4" v-for="subcategories in categories.subcategories" :key="subcategories.id">
+                      <div class="col-sm-4 my-2" v-for="subcategories in getSubcategoryById(categories.id).slice(0,6)"
+                           :key="subcategories.id">
                         <h6 class="submenu-title">{{ subcategories.name }}</h6>
                         <router-link :to="'category/'+categories.slug+'/'+subcategories.slug+'/'+subsubcategories.slug"
-                                     v-for="subsubcategories in subcategories.subsubcategories"
-                                     :key="subsubcategories.id">
-                          {{ subsubcategories.name }}
+                                     v-for="subsubcategories in getSubsubcategoryById(subcategories.id).slice(0,5)"
+                                     :key="subsubcategories.id">{{ subsubcategories.name }}
                         </router-link>
                       </div>
+
                     </div>
                   </li>
                 </ul>
@@ -62,8 +63,22 @@
           </div><!-- .main-menu end -->
           <div class="deal-of-the-day">
             <div class="banner-image">
-              <img src="@/assets/image/home-banner-5.jpg" class="w-100 img-fluid" alt="">
-              <div class="banner-fixed-feature">
+
+              <div>
+                <b-carousel
+                    id="carousel-fade"
+                    fade
+                    img-width="100%"
+                    img-height="100%"
+                >
+                  <b-carousel-slide v-for="(photo, k) in home_banner" :key="k"
+                                    :img-src="photo"
+                  ></b-carousel-slide>
+                </b-carousel>
+              </div>
+
+
+              <div class="banner-fixed-feature" style="z-index: 99">
                 <div class="banner-fixed-feature-item">
                   <i class="fa fa-sm fa-tools"></i>
                   <div class="item-type">
@@ -95,33 +110,42 @@
 </template>
 
 <script>
-import ApiService from "@/core/services/api.service";
 import {api_base_url} from "@/core/config/app";
+import {mapGetters} from "vuex";
 
 export default {
   name: "category_menu",
   data() {
     return {
-      category: [],
+      home_banner: [],
     }
   },
   methods: {
     showImage(e) {
       return api_base_url + e;
     },
-    loadCategory: function () {
-      ApiService.get('category')
-          .then(({data}) => {
-            this.category = data;
-          })
-    },
-    subHide(e) {
-      console.log(e.element);
+    loadSlider(data) {
+      if (!$.isEmptyObject(data)) {
+        if (data.home_banner !== '') {
+          this.home_banner = [];
+          let photos = JSON.parse(data.home_banner);
+          for (let i = 0; i < photos.length; i++) {
+            this.home_banner.push(this.showImage(photos[i]));
+          }
+        }
+      }
     }
   },
+  computed: {
+    ...mapGetters(["getHomeBanner", "getSubcategoryById", "categoryList", "getSubsubcategoryById"])
+  },
   created() {
-    this.loadCategory();
-
+    this.loadSlider(this.getHomeBanner);
+  },
+  watch: {
+    getHomeBanner(data) {
+      this.loadSlider(data);
+    }
   }
 }
 </script>

@@ -21,7 +21,7 @@
           </a>
 
           <div class="user-menu dropdown-menu">
-            <a class="nav-link" @click.prevent="onLogout" href="#"><i class="fa fa-power -off"></i>Logout</a>
+            <a class="nav-link" @click.prevent="onLogout" href="#"><i class="fa fa-power -off"></i>Sign Out</a>
           </div>
         </div>
 
@@ -56,7 +56,7 @@ export default {
     },
     onLogout() {
       this.$store.dispatch(LOGOUT)
-          .then(() => this.$router.push({name: "home"}));
+      this.$router.push({name: "home"});
     },
   },
   computed: {

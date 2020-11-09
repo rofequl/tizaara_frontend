@@ -122,7 +122,7 @@
               <div class="form-row">
                 <div class="form-group col-md-9" style="height: 42px;align-items: center;justify-content: flex-start;">
                   <a href="" class="facebook-btn">Sign Up with Facebook</a>
-                  <a href="#" class="google-btn" @click.prevent="loginWithGoogle">Sign Up with Google</a>
+                  <div class="g-signin2" :data-onsuccess="onSignIn"></div>
                 </div>
                 <div class="form-group col-md-3 justify-content-end">
                   <button :disabled="formReg.busy || !formReg.robot" type="submit" class="btn reg-btn">
@@ -324,7 +324,7 @@
         <div class="container-fluid">
           <div class="row">
             <div class="col-6 col-md-3 col-lg-3 col-xl-3 col-sm-3">
-              <router-link to="/"><img :src="showImage($store.getters.generalList.logo)" class="logo" alt="Logo"></router-link>
+              <router-link to="/"><img v-lazy="showImage($store.getters.generalList.logo)" width="200px" height="70px" class="logo" alt="Logo"></router-link>
             </div>
             <div class="col-12 col-sm-7 col-md-7 col-lg-7 col-xl-7">
               <div class="input-group cus-input-group">
@@ -398,6 +398,9 @@ export default {
       timer: 0,
       timerBusy: false,
       userAuth: false,
+      googleSignInParams: {
+        client_id: '541835342636-cpkgm0vn65eev3p1b3o3hngibfsd09ul.apps.googleusercontent.com'
+      }
     };
   },
   validations: {
@@ -621,6 +624,13 @@ export default {
             console.log('error', error)
           })
 
+    },
+    onSignIn(googleUser) {
+      var profile = googleUser.getBasicProfile();
+      console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
 
   },

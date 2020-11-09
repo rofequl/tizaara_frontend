@@ -3,6 +3,9 @@ import VueAxios from "vue-axios";
 import Vue from "vue";
 import {api_base_url} from "../config/app";
 import JwtService from "@/core/services/jwt.service";
+import store from "@/core/services/store"
+import router from "../../router";
+import {LOGOUT} from "@/core/services/store/auth.module";
 
 const ApiService = {
     init() {
@@ -11,9 +14,10 @@ const ApiService = {
         Vue.axios.interceptors.response.use(responce => {
             return Promise.resolve(responce);
         }, error => {
-            // if (error.response.status === 401) {
-            //
-            // }
+            if (error.response.status === 401 && JwtService.getToken()) {
+                store.dispatch(LOGOUT);
+                router.push({name: "home"});
+            }
             return Promise.reject(error);
         });
     },

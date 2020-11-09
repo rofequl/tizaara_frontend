@@ -9,7 +9,6 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
 import Header from './inc/Header'
 import Sidebar from './inc/Sidebar'
 
@@ -36,15 +35,7 @@ export default {
   created() {
     this.loadResize();
   },
-  mounted() {
-    if (!this.isAuthenticated) {
-      this.$router.push({name: "home"});
-    }
-  },
   computed: {
-    ...mapGetters([
-      "isAuthenticated",
-    ]),
     user() {
       return this.$store.getters.currentUser;
     },

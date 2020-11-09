@@ -44,7 +44,7 @@
             <b-overlay :show="cat_show" opacity="1" spinner-type="grow" no-wrap></b-overlay>
           </div>
         </div>
-        <div class="col-sm-8">
+        <div class="col-sm-8" style="min-height: 75vh">
           <nav aria-label="breadcrumb" class="breadcrumb-nav border-0 mb-0">
             <div class="container d-flex align-items-center">
               <ol class="breadcrumb">
@@ -118,16 +118,18 @@
 
           <div class="product-item-categoryHeader">
             <hr class="first">
-            <div class="name">Patient Monitoring Systems</div>
+            <div class="name" v-if="subsubcategory.length != 0"> {{ subsubcategory.name }}</div>
+            <div class="name" v-if="subsubcategory.length == 0 && subcategory.length != 0"> {{ subcategory.name }}
+            </div>
+            <div class="name" v-if="subsubcategory.length == 0 && subcategory.length == 0"> {{ category.name }}</div>
             <hr class="last">
           </div>
 
-          <div class="items-lest-wrapper">
+          <div class="items-lest-wrapper" v-for="products in product" :key="products.id">
             <div class="row">
               <div class="col-sm-2">
                 <div class="img-wrapper">
-                  <img src="@/assets/image/HTB1Vl.webp" class="img-fluid" alt="">
-                  <div class="count">1/6</div>
+                  <img :src="showImage(products.thumbnail_img)" class="img-fluid" alt="">
                 </div>
               </div>
               <div class="col-sm-10">
@@ -136,11 +138,12 @@
                     <div class="row">
                       <div class="col-sm-7">
                         <div class="cat-1">
-                          <h4><a href="">Medinain ECG Patient Monitor ME-8500, for Hospitals</a>
+                          <h4><a href="">{{ products.name }}</a>
                           </h4>
                           <div class="price-cat">
                             <div class="price">
-                              <h5 class="hot-price"><span>$0.05</span> - <span>$0.79</span>
+                              <h5 class="hot-price">৳
+                                {{ products.priceType == 1 ? totalPrice(products.product_stock) : products.unit_price }}
                               </h5>
                               <p style="color: #888">1 Piece (MOQ)</p>
                             </div>
@@ -149,10 +152,8 @@
                               <a href=""><i class="fab fa-youtube"></i> Company Video</a>
                             </div>
                           </div>
-                          <p><span style="color: #888">Parameters:</span> ECG</p>
-                          <p><span style="color: #888">Usage:</span> Hospitals</p>
-                          <p><span style="color: #888">Power Source:</span> Battery Operated</p>
-
+                          <p v-for="property in jsonDecode(products.property_options)">
+                            <span style="color: #888">{{ property.name }}:</span> {{ property.value }}</p>
                           <a href="" class="view-link">View Details</a>
                         </div>
                       </div>
@@ -185,271 +186,6 @@
             </div>
           </div>
 
-          <div class="items-lest-wrapper">
-            <div class="row">
-              <div class="col-sm-2">
-                <div class="img-wrapper">
-                  <img src="@/assets/image/HTB1Vl.webp" class="img-fluid" alt="">
-                  <div class="count">1/6</div>
-                </div>
-              </div>
-              <div class="col-sm-10">
-                <div class="item-key">
-                  <div class="cat-wrapper">
-                    <div class="row">
-                      <div class="col-sm-7">
-                        <div class="cat-1">
-                          <h4><a href="">Medinain ECG Patient Monitor ME-8500, for Hospitals</a>
-                          </h4>
-                          <div class="price-cat">
-                            <div class="price">
-                              <h5 class="hot-price"><span>$0.05</span> - <span>$0.79</span>
-                              </h5>
-                              <p style="color: #888">1 Piece (MOQ)</p>
-                            </div>
-                            <div class="price-verified-wrapper">
-                              <p>Verified Seller</p>
-                              <a href=""><i class="fab fa-youtube"></i> Company Video</a>
-                            </div>
-                          </div>
-                          <p><span style="color: #888">Parameters:</span> ECG</p>
-                          <p><span style="color: #888">Usage:</span> Hospitals</p>
-                          <p><span style="color: #888">Power Source:</span> Battery Operated</p>
-
-                          <a href="" class="view-link">View Details</a>
-                        </div>
-                      </div>
-                      <div class="col-sm-5" style="border-left: 1px solid #ddd;">
-                        <div class="cat-2">
-                          <h4><a href="">Derma Medicine Point</a></h4>
-                          <span style="color: #888" class="d-block">Dhaka, Bangladesh</span>
-                          <span style="color: #888"
-                                class="d-block">Manufacturer, Trading Company</span>
-                          <div class="call-center">
-                            <a href="" class="mobile">
-                              <i class="fas fa-phone-alt"></i> Call
-                              <span style="background: #fff;padding: 5px;margin-left: 8px;">+880 1717249225</span>
-                            </a>
-                          </div>
-                          <a href="" style="display: inline-block;
-                                                    background: #f05931;
-                                                    padding: 5px 10px;
-                                                    margin-top: 25px;
-                                                    font-size: 14px;
-                                                    color: #fff;
-                                                    border-radius: 3px;"><i class="far fa-envelope mr-1"></i> Contact
-                            Supplier</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="item-container">
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-            <a class="product-item" title="Fila Exolize 2" href="product-details.html">
-              <div class="item-box">
-                <div class="img-box">
-                  <img class="equalHeightWidth" src="@/assets/image/HTB1Vl.webp" alt="Fila Exolize 2">
-                </div>
-                <div class="caption">
-                  <div class="product-title">
-                    <h6 title="Fila Exolize 2">Medinain ECG Patient Monitor ME-8500, for Hospitals</h6>
-                  </div>
-                  <h5 class="price">
-                    <b>৳</b> <span>230.00</span>
-                    -
-                    <b>৳</b> <span>230.00</span>
-                    <span>/ Set</span>
-                    <div class="old-price">৳ 3,050</div>
-                    <div class="mt-3 font-weight-normal">5 Pieces (Min. Order)</div>
-                  </h5>
-                </div>
-              </div>
-            </a>
-          </div>
         </div>
         <div class="col-sm-2">
           <div class="w-100 h-100" style="background: #e3e3e3"></div>
@@ -474,13 +210,16 @@ export default {
       subcategory_list: [],
       subsubcategory_list: [],
       business_type: [],
-      Product: [],
+      product: [],
       cat_show: true
     }
   },
   methods: {
     showImage(e) {
       return api_base_url + e;
+    },
+    jsonDecode(e) {
+      return JSON.parse(e);
     },
     handleScroll() {
       if ($(window).scrollTop() > 10) {
@@ -545,11 +284,36 @@ export default {
             this.business_type = data;
           })
     },
+    getProduct: function () {
+      let url = '';
+      if (this.$route.params.cat) {
+        url += 'category=' + this.$route.params.cat;
+      }
+      if (this.$route.params.sub) {
+        url += '&subcategory=' + this.$route.params.sub;
+      }
+      if (this.$route.params.subcat) {
+        url += '&subsubcategory=' + this.$route.params.subcat;
+      }
+      url = 'product-category?' + url;
+      ApiService.get(url)
+          .then(({data}) => {
+            this.product = data;
+            this.show = false;
+          })
+    },
+    totalPrice: function (e) {
+      if (e.length == 0) return;
+      let max = e.reduce((a, b) => Number(a.price) > Number(b.price) ? a : b)
+      let min = e.reduce((a, b) => Number(a.price) < Number(b.price) && 0 !== Number(a.price) ? a : b)
+      return max === min ? max.price : min.price + ' - ' + max.price;
+    }
   },
   created() {
     window.addEventListener('scroll', this.handleScroll);
     this.breadcrumb();
     this.loadBusinessType();
+    this.getProduct();
   },
 }
 </script>

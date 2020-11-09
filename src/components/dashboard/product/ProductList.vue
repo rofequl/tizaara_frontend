@@ -1,5 +1,5 @@
 <template>
-  <div class="content pr-5">
+  <div class="content pr-md-5">
     <div class="animated fadeIn">
       <!-- Page Header -->
       <div class="row mb-3">
@@ -12,14 +12,14 @@
       <!-- End Page Header -->
 
       <div class="row">
-        <div class="col-md-3">
-          <section class="card" >
+        <div class="col-lg-3 col-md-4 col-sm-6 col-12" v-for="(products, index) in product" :key="index">
+          <section class="card">
             <div class="corner-ribon black-ribon">
               <div class="dropdown">
                 <span type="button" style="font-size: 12px"
                       data-toggle="dropdown" aria-haspopup="true"
                       aria-expanded="false">
-                  <i class="fas fa-bars"></i>
+                  <i class="fas fa-bars" style="color: #333"></i>
                 </span>
                 <div class="dropdown-menu" style="font-size: 12px" aria-labelledby="dropdownMenuButton">
                   <a class="dropdown-item" href="#">View Details</a>
@@ -28,9 +28,9 @@
                 </div>
               </div>
             </div>
-            <img class="card-img-top" src="https://i.imgur.com/ue0AB6J.png" alt="Card image cap">
-            <h4>Wheat Flour, Packaging: Bag</h4>
-            <p class="mb-0" style="font-size: 12px">SKU: JDFJT656GD6FHGDF</p>
+            <img class="card-img-top" :src="showImage(products.thumbnail_img)" alt="Card image cap">
+            <h4>{{products.name}}</h4>
+            <p class="mb-0" style="font-size: 12px">SKU: {{products.sku}}</p>
             <div class="weather-category twt-category">
               <ul>
                 <li class="active">
@@ -66,27 +66,25 @@ export default {
   name: "ProductList",
   data() {
     return {
-      projects: {},
+      product: {},
     }
   },
   methods: {
-    getProfilePhoto(e) {
+    showImage(e) {
       return api_base_url + e;
     },
     loadData() {
       ApiService.get('user/product')
           .then(({data}) => {
-            this.loadActive = false;
-            let response = data.data;
-            if (this.tableData.draw == data.draw) {
-              this.projects = response;
-              this.serial_no = response.from;
-            }
+            this.product = data;
           })
           .catch(({response}) => {
-
+            swal.fire("Failed!", 'There was something wrong.', 'warning');
           });
     },
+  },
+  created() {
+    this.loadData();
   }
 }
 </script>
