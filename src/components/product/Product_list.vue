@@ -1,5 +1,5 @@
 <template>
-  <div class="product-list-wrapper">
+  <div class="product-list-wrapper" style="min-height: 80vh">
     <div class="container-fluid">
       <div class="row">
         <div class="col-sm-2">

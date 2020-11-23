@@ -11,7 +11,7 @@ export const SUBCATEGORY_SET_LOADING = "subcategorySetLoading";
 const state = {
     errors: null,
     loading: false,
-    subcategory: {},
+    subcategory: [],
 };
 
 const getters = {

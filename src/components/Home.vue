@@ -20,18 +20,22 @@ import {SUBSUBCATEGORY_LIST} from "@/core/services/store/module/subsubcategory";
 import {HOMEBANNER_LIST} from "@/core/services/store/module/homeslider";
 import {HOME_CATEGORY_PRODUCT} from "@/core/services/store/module/category";
 import {BRAND_LIST} from "@/core/services/store/module/brand";
+import {mapGetters} from "vuex";
 
 export default {
   name: "Home",
   created() {
-    this.$store.dispatch(HOMEBANNER_LIST)
-    this.$store.dispatch(SUBCATEGORY_LIST)
-    this.$store.dispatch(CATEGORY_LIST)
-    this.$store.dispatch(SUBSUBCATEGORY_LIST)
-    this.$store.dispatch(HOME_CATEGORY_PRODUCT)
-    this.$store.dispatch(BRAND_LIST)
+    this.getHomeBanner.length < 1 ? this.$store.dispatch(HOMEBANNER_LIST) : '';
+    this.subsubcategoryList.length < 1 ? this.$store.dispatch(SUBSUBCATEGORY_LIST) : '';
+    this.subcategoryList.length < 1 ? this.$store.dispatch(SUBCATEGORY_LIST) : '';
+    this.categoryList.length < 1 ? this.$store.dispatch(CATEGORY_LIST) : '';
+    this.homeCategoryProduct.length < 1 ? this.$store.dispatch(HOME_CATEGORY_PRODUCT) : '';
+    this.brandList.length < 1 ? this.$store.dispatch(BRAND_LIST) : '';
   },
-  components: {CategoryMenu, Deal, Brands, Quotation, Cat_product}
+  components: {CategoryMenu, Deal, Brands, Quotation, Cat_product},
+  computed: {
+    ...mapGetters(["categoryList", "subcategoryList", "subsubcategoryList", "brandList", "homeCategoryProduct", "getHomeBanner"])
+  },
 }
 </script>
 

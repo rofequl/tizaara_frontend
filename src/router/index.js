@@ -86,6 +86,12 @@ export default new Router({
                     name: "Profile",
                     component: () => import("@/components/dashboard/profile/Profile")
                 },
+                {
+                    meta: {title: 'Quotation List'},
+                    path: "/dashboard/quotation",
+                    name: "quotation-list",
+                    component: () => import("@/components/dashboard/marketing/Quotation")
+                },
             ]
         },
         {

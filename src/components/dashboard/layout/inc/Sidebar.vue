@@ -27,6 +27,16 @@
               </li>
             </ul>
           </li>
+          <li class="menu-item-has-children dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+                class="menu-icon fas fa-bullhorn"></i>Marketing</a>
+            <ul class="sub-menu children dropdown-menu">
+              <li>
+                <i class="fas fa-mail-bulk"></i>
+                <router-link to="/dashboard/quotation">Quotation</router-link>
+              </li>
+            </ul>
+          </li>
           <li v-if="isBuyer" class="menu-title">Buyer</li>
         </ul>
       </div>

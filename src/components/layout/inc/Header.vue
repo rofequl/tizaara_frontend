@@ -305,7 +305,7 @@
                   </div>
                 </div>
                 <hr>
-                <router-link to="/dashboard" class="link-2">My {{$store.getters.generalList.site_name}}</router-link>
+                <router-link to="/dashboard" class="link-2">My {{ $store.getters.generalList.site_name }}</router-link>
                 <a href="" class="link-2">Message RFQ</a>
                 <a href="" class="link-2">My Order</a>
                 <a href="" class="link-2">My Favourites</a>
@@ -320,26 +320,18 @@
         </div><!-- container end -->
       </div><!-- header-top end -->
 
-      <div class="logo-search-section">
+      <div class="logo-search-section" style="border-bottom: 2px solid rgba(51, 51, 51, 0.17);">
         <div class="container-fluid">
           <div class="row">
             <div class="col-6 col-md-3 col-lg-3 col-xl-3 col-sm-3">
-              <router-link to="/"><img v-lazy="showImage($store.getters.generalList.logo)" width="200px" height="70px" class="logo" alt="Logo"></router-link>
+              <router-link to="/">
+                <b-img-lazy :src="showImage($store.getters.generalList.logo)" width="200px" height="70px" class="logo"
+                            alt="Logo">
+                </b-img-lazy>
+              </router-link>
             </div>
             <div class="col-12 col-sm-7 col-md-7 col-lg-7 col-xl-7">
-              <div class="input-group cus-input-group">
-                <div class="input-group-prepend">
-                  <button class="btn dropdown-toggle" type="button" data-toggle="dropdown"
-                          aria-haspopup="true" aria-expanded="false">Products
-                  </button>
-                  <div class="dropdown-menu">
-                    <a class="dropdown-item" href="#">Products</a>
-                    <a class="dropdown-item" href="#">Suppliers</a>
-                  </div>
-                </div>
-                <input type="text" class="form-control" aria-label="Text input with dropdown button">
-                <button type="submit" class="btn btn-search"><i class="fa fa-search"></i></button>
-              </div>
+              <Search/>
             </div>
             <div class="col-6 col-md-2 col-sm-2 col-lg-2 col-xl-2">
               <div class="add-to-card-wrapper">
@@ -366,6 +358,7 @@ import VueRecaptcha from 'vue-recaptcha';
 import {REGISTER, LOGIN, LOGOUT, VERIFY_AUTH} from "@/core/services/store/auth.module";
 import {api_base_url} from "@/core/config/app";
 import ApiService from "@/core/services/api.service";
+import Search from "@/components/layout/inc/Search";
 
 export default {
   mixins: [validationMixin],
@@ -634,7 +627,7 @@ export default {
     }
 
   },
-  components: {Password, 'vue-recaptcha': VueRecaptcha},
+  components: {Password, 'vue-recaptcha': VueRecaptcha, Search},
   computed: {
     ...mapGetters([
       "isAuthenticated",

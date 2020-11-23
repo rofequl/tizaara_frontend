@@ -78,7 +78,7 @@
               </div>
 
 
-              <div class="banner-fixed-feature" style="z-index: 99">
+              <div class="banner-fixed-feature" style="z-index: 1">
                 <div class="banner-fixed-feature-item">
                   <i class="fa fa-sm fa-tools"></i>
                   <div class="item-type">

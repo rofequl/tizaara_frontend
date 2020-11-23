@@ -103,3 +103,36 @@ Vue.use(VueDatePicker);
 ============================================= */
 const VueScrollTo = require('vue-scrollto')
 Vue.use(VueScrollTo)
+
+/*============================================
+// npm install vue-suggestion
+============================================= */
+import VueSuggestion from 'vue-suggestion'
+
+Vue.use(VueSuggestion)
+
+/*============================================
+// npm install vue-infinite-scroll --save
+============================================= */
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(infiniteScroll)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

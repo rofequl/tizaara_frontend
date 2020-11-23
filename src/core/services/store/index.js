@@ -19,6 +19,8 @@ import personal from './module/personal';
 import companybasic from './module/companybasic';
 import homeslider from "@/core/services/store/module/homeslider";
 import businesstype from "@/core/services/store/module/businesstype";
+import quotation from "@/core/services/store/module/quotation";
+import search from "@/core/services/store/module/search";
 
 
 Vue.use(Vuex)
@@ -45,5 +47,7 @@ export default new Vuex.Store({
         companybasic,
         homeslider,
         businesstype,
+        quotation,
+        search,
     }
 })
