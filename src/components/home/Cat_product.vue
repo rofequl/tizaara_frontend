@@ -23,10 +23,10 @@
                       <b-img v-lazy="showImage(subcategories.banner)" width="64" alt="placeholder"></b-img>
                     </template>
 
-                    <h6 class="mt-0">{{ subcategories.name }}</h6>
-                    <p v-for="subsubcategories in getSubsubcategoryById(subcategories.id).slice(0,5)"
+                    <h6 class="mt-0"><router-link :to="'category/'+category.slug+'/'+subcategories.slug">{{ subcategories.name }}</router-link></h6>
+                    <router-link :to="'category/'+category.slug+'/'+subcategories.slug+'/'+subsubcategories.slug" v-for="subsubcategories in getSubsubcategoryById(subcategories.id).slice(0,5)"
                     :key="subsubcategories.id">
-                    {{ subsubcategories.name }}</p>
+                    {{ subsubcategories.name }}<br></router-link>
                   </b-media>
                 </b-card>
               </div>

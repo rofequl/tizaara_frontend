@@ -700,7 +700,6 @@
 import {validationMixin} from "vuelidate";
 import {maxLength, required} from "vuelidate/lib/validators";
 import {api_base_url} from "@/core/config/app";
-import ApiService from "@/core/services/api.service";
 import VueUploadMultipleImage from 'vue-upload-multiple-image'
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import {SUBSUBCATEGORY_LIST} from "@/core/services/store/module/subsubcategory";

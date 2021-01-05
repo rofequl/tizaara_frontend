@@ -21,6 +21,11 @@ import homeslider from "@/core/services/store/module/homeslider";
 import businesstype from "@/core/services/store/module/businesstype";
 import quotation from "@/core/services/store/module/quotation";
 import search from "@/core/services/store/module/search";
+import page_manage from "@/core/services/store/module/page_manage";
+import help from "@/core/services/store/module/help";
+import flash_deals from "@/core/services/store/module/flash_deals";
+import testimonial from "@/core/services/store/module/testimonial";
+import product_request from "@/core/services/store/module/product_request";
 
 
 Vue.use(Vuex)
@@ -49,5 +54,10 @@ export default new Vuex.Store({
         businesstype,
         quotation,
         search,
+        page_manage,
+        help,
+        flash_deals,
+        testimonial,
+        product_request,
     }
 })

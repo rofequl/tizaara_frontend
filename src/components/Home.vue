@@ -3,8 +3,10 @@
     <CategoryMenu/>
     <Deal/>
     <Cat_product/>
+    <Testimonial/>
     <Brands/>
     <Quotation/>
+    <Newsletter/>
   </div>
 </template>
 
@@ -14,6 +16,8 @@ import Deal from './home/Deal'
 import Brands from "@/components/home/Brands";
 import Quotation from "@/components/home/Quotation";
 import Cat_product from "@/components/home/Cat_product";
+import Newsletter from "@/components/home/Newsletter";
+import Testimonial from "@/components/home/Testimonial";
 import {SUBCATEGORY_LIST} from "@/core/services/store/module/subcategory";
 import {CATEGORY_LIST} from "@/core/services/store/module/category";
 import {SUBSUBCATEGORY_LIST} from "@/core/services/store/module/subsubcategory";
@@ -32,7 +36,7 @@ export default {
     this.homeCategoryProduct.length < 1 ? this.$store.dispatch(HOME_CATEGORY_PRODUCT) : '';
     this.brandList.length < 1 ? this.$store.dispatch(BRAND_LIST) : '';
   },
-  components: {CategoryMenu, Deal, Brands, Quotation, Cat_product},
+  components: {CategoryMenu, Deal, Brands, Quotation, Cat_product, Newsletter, Testimonial},
   computed: {
     ...mapGetters(["categoryList", "subcategoryList", "subsubcategoryList", "brandList", "homeCategoryProduct", "getHomeBanner"])
   },

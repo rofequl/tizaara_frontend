@@ -25,6 +25,12 @@ export default new Router({
                     component: () => import("@/components/Home")
                 },
                 {
+                    meta: {title: 'Flash Deal'},
+                    path: "/flash-deal/:slug",
+                    name: "Flash Deal",
+                    component: () => import("@/components/page/FlashDeal")
+                },
+                {
                     meta: {title: 'Categories'},
                     path: "/category/:cat?/:sub?/:subcat?",
                     name: "category",
@@ -41,6 +47,42 @@ export default new Router({
                     path: "/categories",
                     name: "All Categories",
                     component: () => import("@/components/others/Categories"),
+                },
+                {
+                    meta: {title: 'Terms and Condition'},
+                    path: "/terms-conditions",
+                    name: "terms-conditions",
+                    component: () => import("@/components/page/Terms"),
+                },
+                {
+                    meta: {title: 'Privacy Policy'},
+                    path: "/privacy-policy",
+                    name: "privacy-policy",
+                    component: () => import("@/components/page/Privacy"),
+                },
+                {
+                    meta: {title: 'About Us'},
+                    path: "/about-us",
+                    name: "about-us",
+                    component: () => import("@/components/page/About"),
+                },
+                {
+                    meta: {title: 'Join our Sales Team'},
+                    path: "/join-sales",
+                    name: "join-sales",
+                    component: () => import("@/components/page/JoinSales"),
+                },
+                {
+                    meta: {title: 'Help Center'},
+                    path: "/help-center",
+                    name: "help-center",
+                    component: () => import("@/components/page/Help"),
+                },
+                {
+                    meta: {title: 'Help Center'},
+                    path: "/help-category",
+                    name: "help-category",
+                    component: () => import("@/components/page/HelpCategory"),
                 }
             ]
         },
@@ -73,6 +115,12 @@ export default new Router({
                     path: "/dashboard/product-list",
                     name: "product-list",
                     component: () => import("@/components/dashboard/product/ProductList")
+                },
+                {
+                    meta: {title: 'Product Request'},
+                    path: "/dashboard/product-request/:type?",
+                    name: "product-request",
+                    component: () => import("@/components/dashboard/product/ProductRequest")
                 },
                 {
                     meta: {title: 'Message'},
